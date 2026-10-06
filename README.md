@@ -6,26 +6,30 @@
 
 Проект демонстрирует полный цикл настройки серверной инфраструктуры:
 
-- Создание и базовая настройка LXC-контейнера на Proxmox VE (Debian 12)
+- Создание и базовая настройка LXC-контейнера на Proxmox VE (Debian 13)
 - Автоматизация через Ansible одной командой
 - Развёртывание multi-container приложения через Docker Compose
 - Настройка сетевой безопасности (UFW + SSH-ключи)
 
 ## Архитектура
+
+```
 Proxmox VE
-└── LXC (Debian 12)
-├── Ansible
-│   ├── обновление системы
-│   ├── установка Docker
-│   ├── настройка UFW
-│   └── SSH-ключи
-└── Docker Compose
-├── web  (FastAPI)
-└── db   (PostgreSQL 16)
-text## Стек технологий
+└── LXC (Debian 13)
+    ├── Ansible
+    │   ├── обновление системы
+    │   ├── установка Docker
+    │   ├── настройка UFW
+    │   └── SSH-ключи
+    └── Docker Compose
+        ├── web  (FastAPI)
+        └── db   (PostgreSQL 16)
+```
+
+## Стек технологий
 
 - **Гипервизор:** Proxmox VE
-- **Контейнер:** LXC (Debian 12)
+- **Контейнер:** LXC (Debian 13)
 - **Автоматизация:** Ansible
 - **Контейнеризация:** Docker + Docker Compose
 - **Backend:** FastAPI + Uvicorn
@@ -34,6 +38,8 @@ text## Стек технологий
 - **Аутентификация:** SSH-ключи
 
 ## Структура проекта
+
+```
 proxmox-ansible-docker/
 ├── ansible/
 │   ├── inventory.ini
@@ -47,37 +53,45 @@ proxmox-ansible-docker/
 │           └── Dockerfile
 ├── README.md
 └── .gitignore
-text## Требования
+```
 
-- Proxmox VE с созданным LXC (Debian 12)
+## Требования
+
+- Proxmox VE с созданным LXC (Debian 13)
 - Ansible на управляющей машине
 - Коллекция `community.general`
 
 ```bash
 sudo apt update && sudo apt install -y ansible
 ansible-galaxy collection install community.general
-Развёртывание
+```
 
-Укажите IP LXC и путь к SSH-ключу в ansible/inventory.ini
-Укажите разрешённый IP в переменной allowed_ip в playbook.yml
-Запустите playbook:
+## Развёртывание
 
-Bashcd ansible
+1. Укажите IP LXC и путь к SSH-ключу в `ansible/inventory.ini`
+2. Укажите разрешённый IP в переменной `allowed_ip` в `playbook.yml`
+3. Запустите playbook:
+
+```bash
+cd ansible
 ansible-playbook -i inventory.ini playbook.yml
+```
+
 После выполнения приложение будет доступно по адресам:
 
-http://<IP_LXC>:8000/
-http://<IP_LXC>:8000/health
-http://<IP_LXC>:8000/items
+- `http://<IP_LXC>:8000/`
+- `http://<IP_LXC>:8000/health`
+- `http://<IP_LXC>:8000/items`
 
-Возможности развития
+## Возможности развития
 
-Создание non-root пользователя и настройка sudo
-Отключение парольной аутентификации SSH
-Вынос секретов в Ansible Vault / .env
-Добавление Nginx в качестве reverse-proxy
-Мониторинг (Zabbix / Prometheus + Grafana)
-CI/CD через GitHub Actions
+- Создание non-root пользователя и настройка sudo
+- Отключение парольной аутентификации SSH
+- Вынос секретов в Ansible Vault / `.env`
+- Добавление Nginx в качестве reverse-proxy
+- Мониторинг (Zabbix / Prometheus + Grafana)
+- CI/CD через GitHub Actions
 
-Автор
+## Автор
+
 Студент. Проект выполнен самостоятельно в рамках изучения Ansible, Docker Compose и работы с Proxmox.
